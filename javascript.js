@@ -11,6 +11,7 @@ function createGrid() {
     clearEntryBtn.textContent = 'CE';
     clearEntryBtn.classList.add('clearBtn');
     clearBtnsContainer.appendChild(clearEntryBtn);
+
     const clearBtn = document.createElement('button');
     clearBtn.textContent = 'C';
     clearBtn.classList.add('clearBtn');
@@ -18,7 +19,7 @@ function createGrid() {
 
     grid.appendChild(numberGrid);
 
-
+    // Number Grid
     for (let i = 9; i >= 0; i--) {
         let number = document.createElement('button');
         number.textContent = i;
@@ -27,6 +28,7 @@ function createGrid() {
         numberGrid.appendChild(number);
     }
 
+    // Symbol Grid
     for (let i = 0; i < symbolArray.length; i++) {
         let symbol = document.createElement('button');
         symbol.classList.add('symbol');
@@ -37,3 +39,59 @@ function createGrid() {
 }
 
 createGrid();
+
+const buttons = document.querySelector('.buttons');
+buttons.addEventListener('click', () => {
+    console.log('hello');
+});
+
+
+
+
+let firstNumber;
+let secondNumber;
+let operator;
+
+function addition(a, b) {
+    console.log(a + b);
+    return a + b;
+}
+
+function subtraction(a, b) {
+    console.log(a - b);
+    return a - b;
+}
+
+function multiplication(a, b) {
+    console.log(a * b);
+    return a * b;
+}
+
+function division(a, b) {
+    console.log(a / b);
+    return a / b;
+}
+
+function operate(a, op, b) {
+
+    switch (op) {
+        case '+':
+            console.log('Its addition');
+            addition(a, b);
+            break;
+        case '-':
+            console.log('Its subtraction');
+            subtraction(a, b);
+            break;
+        case '*':
+            console.log('Its multiplication');
+            multiplication(a, b);
+            break;
+        case '/':
+            console.log('Its division');
+            division(a, b);
+            break;
+        default:
+            break;
+    }
+}
