@@ -3,54 +3,98 @@ const clearBtnsContainer = document.querySelector('.clearBtnsContainer');
 const numberGrid = document.querySelector('.numberGrid');
 const symbolGrid = document.querySelector('.symbolGrid');
 
-const symbolArray = ['/', 'X', '-', '+', '='];
+const operatorArray = ['/', 'x', '-', '+', '='];
 
 
-function createGrid() {
-    const clearEntryBtn = document.createElement('button');
-    clearEntryBtn.textContent = 'CE';
-    clearEntryBtn.classList.add('clearBtn');
-    clearBtnsContainer.appendChild(clearEntryBtn);
+// Create CE button
+const clearEntryBtn = document.createElement('button');
+clearEntryBtn.textContent = 'CE';
+clearEntryBtn.classList.add('clearBtn');
+clearBtnsContainer.appendChild(clearEntryBtn);
 
-    const clearBtn = document.createElement('button');
-    clearBtn.textContent = 'C';
-    clearBtn.classList.add('clearBtn');
-    clearBtnsContainer.appendChild(clearBtn);
+// Create Clear button
+const clearBtn = document.createElement('button');
+clearBtn.textContent = 'C';
+clearBtn.classList.add('clearBtn');
+clearBtnsContainer.appendChild(clearBtn);
 
-    grid.appendChild(numberGrid);
 
-    // Number Grid
-    for (let i = 9; i >= 0; i--) {
-        let number = document.createElement('button');
-        number.textContent = i;
-        number.classList.add('number');
-        number.classList.add(`n${i}`);
-        numberGrid.appendChild(number);
-    }
+// Create number grid
+grid.appendChild(numberGrid);
+for (let i = 9; i >= 0; i--) {
+    let number = document.createElement('button');
+    number.textContent = i;
+    number.classList.add('number');
+    number.id = `btn${i}`;
+    numberGrid.appendChild(number);
+}
 
-    // Symbol Grid
-    for (let i = 0; i < symbolArray.length; i++) {
-        let symbol = document.createElement('button');
-        symbol.classList.add('symbol');
-        symbol.classList.add(`s${i}`);
-        symbol.textContent = symbolArray[i];
-        symbolGrid.appendChild(symbol);
+// Create symbol grid
+for (let i = 0; i < operatorArray.length; i++) {
+    let symbol = document.createElement('button');
+    symbol.classList.add('symbol');
+    symbol.id = `sym${i}`;
+    symbol.textContent = operatorArray[i];
+    symbolGrid.appendChild(symbol);
+}
+
+
+let firstNumber = '';
+let secondNumber = '';
+let operator = '';
+let firstHalf = true;
+let secondHalf = false;
+
+// Display selected button on the screen
+const screen = document.querySelector('.screen');
+screen.textContent = '';
+
+const numberBtns = document.querySelectorAll('.number');
+let btnArray = Array.from(numberBtns);
+btnArray.reverse();
+
+const symbolBtns = document.querySelectorAll('.symbol');
+let symbolArray = Array.from(symbolBtns);
+
+function operation() {
+    btnArray.forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+            if (firstHalf) {
+                let currentBtn = e.target.innerHTML;
+                firstNumber += currentBtn;
+            }
+        });
+
+        if (secondHalf) {
+            btn.addEventListener('click', (e) => {
+                let currentBtn = e.target.innerHTML;
+                secondNumber += currentBtn;
+            });
+        }
+    });
+
+    if (!firstHalf && !secondHalf) {
+        operate(firstNumber, operator, secondNumber);
     }
 }
 
-createGrid();
-
-const buttons = document.querySelector('.buttons');
-buttons.addEventListener('click', () => {
-    console.log('hello');
+symbolArray.forEach((symbol) => {
+    symbol.addEventListener('click', (e) => {
+        let currentSymbol = e.target.innerHTML;
+        if (currentSymbol === '=') {
+            secondHalf = false;
+            operation();
+        } else {
+            firstHalf = false;
+            secondHalf = true;
+            operator = currentSymbol;
+            operation();
+        }
+    });
 });
 
+operation();
 
-
-
-let firstNumber;
-let secondNumber;
-let operator;
 
 function addition(a, b) {
     console.log(a + b);
@@ -77,13 +121,13 @@ function operate(a, op, b) {
     switch (op) {
         case '+':
             console.log('Its addition');
-            addition(a, b);
+            addition(parseInt(a), parseInt(b));
             break;
         case '-':
             console.log('Its subtraction');
             subtraction(a, b);
             break;
-        case '*':
+        case 'x':
             console.log('Its multiplication');
             multiplication(a, b);
             break;
