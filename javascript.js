@@ -5,7 +5,6 @@ const symbolGrid = document.querySelector('.symbolGrid');
 
 const operatorArray = ['/', 'x', '-', '+', '='];
 
-
 // Create CE button
 const clearEntryBtn = document.createElement('button');
 clearEntryBtn.textContent = 'CE';
@@ -17,7 +16,10 @@ const clearBtn = document.createElement('button');
 clearBtn.textContent = 'C';
 clearBtn.classList.add('clearBtn');
 clearBtnsContainer.appendChild(clearBtn);
-
+clearBtn.addEventListener('click', () => {
+    console.log('clear button clicked!');
+    
+});
 
 // Create number grid
 grid.appendChild(numberGrid);
@@ -38,81 +40,66 @@ for (let i = 0; i < operatorArray.length; i++) {
     symbolGrid.appendChild(symbol);
 }
 
-
-let firstNumber = '';
-let secondNumber = '';
-let operator = '';
-let firstHalf = true;
-let secondHalf = false;
-
-// Display selected button on the screen
-const screen = document.querySelector('.screen');
-screen.textContent = '';
-
 const numberBtns = document.querySelectorAll('.number');
-let btnArray = Array.from(numberBtns);
+const btnArray = Array.from(numberBtns);
 btnArray.reverse();
 
 const symbolBtns = document.querySelectorAll('.symbol');
-let symbolArray = Array.from(symbolBtns);
+const symbolArray = Array.from(symbolBtns);
 
-function operation() {
-    btnArray.forEach((btn) => {
+// Display selected button on the screen
+const screen = document.querySelector('.screen');
+
+let firstValue = '';
+let secondValue = '';
+let operator = '';
+let result = 0;
+
+btnArray.forEach((btn) => {
         btn.addEventListener('click', (e) => {
-            if (firstHalf) {
-                let currentBtn = e.target.innerHTML;
-                firstNumber += currentBtn;
+            let target = e.target.innerHTML;
+            if (firstValue == '') {
+                screen.textContent += target;
+            } else {
+                screen.textContent += target;
             }
         });
-
-        if (secondHalf) {
-            btn.addEventListener('click', (e) => {
-                let currentBtn = e.target.innerHTML;
-                secondNumber += currentBtn;
-            });
-        }
-    });
-
-    if (!firstHalf && !secondHalf) {
-        operate(firstNumber, operator, secondNumber);
-    }
-}
+});
 
 symbolArray.forEach((symbol) => {
     symbol.addEventListener('click', (e) => {
         let currentSymbol = e.target.innerHTML;
         if (currentSymbol === '=') {
-            secondHalf = false;
-            operation();
+            secondValue = parseInt(screen.textContent.substring(screen.textContent.indexOf(operator) + 1));
+            operate(firstValue, operator, secondValue);
+            console.log(result);
+            screen.textContent += ' = ' + result;
         } else {
-            firstHalf = false;
-            secondHalf = true;
             operator = currentSymbol;
-            operation();
+            firstValue = parseInt(screen.textContent);
+            screen.textContent += ' ' + currentSymbol + ' ';
         }
     });
 });
 
-operation();
-
 
 function addition(a, b) {
-    console.log(a + b);
+    result = a + b;
     return a + b;
 }
 
 function subtraction(a, b) {
-    console.log(a - b);
+    result = a - b;
     return a - b;
 }
 
 function multiplication(a, b) {
-    console.log(a * b);
+    result = a * b;
     return a * b;
 }
 
 function division(a, b) {
-    console.log(a / b);
+    result = a / b;
     return a / b;
 }
 
@@ -121,7 +108,7 @@ function operate(a, op, b) {
     switch (op) {
         case '+':
             console.log('Its addition');
-            addition(parseInt(a), parseInt(b));
+            addition(a, b);
             break;
         case '-':
             console.log('Its subtraction');
