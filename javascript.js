@@ -18,7 +18,7 @@ clearBtn.classList.add('clearBtn');
 clearBtnsContainer.appendChild(clearBtn);
 clearBtn.addEventListener('click', () => {
     console.log('clear button clicked!');
-    
+
 });
 
 // Create number grid
@@ -53,31 +53,58 @@ const screen = document.querySelector('.screen');
 let firstValue = '';
 let secondValue = '';
 let operator = '';
-let result = 0;
+let result;
+
+let counter = 0;
 
 btnArray.forEach((btn) => {
-        btn.addEventListener('click', (e) => {
-            let target = e.target.innerHTML;
-            if (firstValue == '') {
-                screen.textContent += target;
-            } else {
-                screen.textContent += target;
-            }
-        });
+    btn.addEventListener('click', (e) => {
+        let target = e.target;
+        
+        if (counter > 0) {
+            console.log('clearing screen');
+            screen.textContent = '';
+            counter--;
+        }
+        screen.textContent += target.innerHTML;
+    });
 });
+
+// console.log(`fv: ${firstValue}  op: ${operator}  sv: ${secondValue}`);
 
 symbolArray.forEach((symbol) => {
     symbol.addEventListener('click', (e) => {
-        let currentSymbol = e.target.innerHTML;
-        if (currentSymbol === '=') {
-            secondValue = parseInt(screen.textContent.substring(screen.textContent.indexOf(operator) + 1));
-            operate(firstValue, operator, secondValue);
+        counter++;
+        let currentSymbol = e.target;
+
+        if (currentSymbol.innerHTML === '=') {
+            secondValue = screen.textContent;
+            operate(parseInt(firstValue), operator, parseInt(secondValue));
             console.log(result);
-            screen.textContent += ' = ' + result;
+            screen.textContent = result;
+            firstValue = String(result);
+            operator = '';
+            console.log(`fv: ${firstValue}  op: ${operator}  sv: ${secondValue}  result: ${result}`);
+            counter--;
+
         } else {
-            operator = currentSymbol;
-            firstValue = parseInt(screen.textContent);
-            screen.textContent += ' ' + currentSymbol + ' ';
+            if (firstValue == '') {
+                firstValue = screen.textContent;
+            } else if (secondValue == '') {
+                secondValue = screen.textContent;
+            }
+            if (operator != '') {
+                operate(parseInt(firstValue), operator, parseInt(secondValue));
+                console.log(result);
+                screen.textContent = result;
+            }
+            operator = currentSymbol.innerHTML;
+
+            if (result != undefined) {
+                firstValue = String(result);
+                secondValue = '';
+                console.log(`fv: ${firstValue}  op: ${operator}  sv: ${secondValue}  result: ${result}`);
+            }
         }
     });
 });
