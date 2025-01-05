@@ -1,35 +1,38 @@
-const grid = document.querySelector('.grid');
-const clearBtnsContainer = document.querySelector('.clearBtnsContainer');
-const numberGrid = document.querySelector('.numberGrid');
-const symbolGrid = document.querySelector('.symbolGrid');
+const mainGrid = document.querySelector('.mainGrid');
+const clearBtnsContainer = document.querySelector('.clearBtnSection');
+const numberGrid = document.querySelector('.numberSection');
+const symbolGrid = document.querySelector('.symbolColumn');
+const extraSection = document.querySelector('.extraSection');
+
 
 const operatorArray = ['/', 'x', '-', '+', '='];
 
-// Create CE button
-const clearEntryBtn = document.createElement('button');
-clearEntryBtn.textContent = 'CE';
-clearEntryBtn.classList.add('clearBtn');
-clearBtnsContainer.appendChild(clearEntryBtn);
 
-// Create Clear button
-const clearBtn = document.createElement('button');
-clearBtn.textContent = 'C';
-clearBtn.classList.add('clearBtn');
-clearBtnsContainer.appendChild(clearBtn);
-clearBtn.addEventListener('click', () => {
-    console.log('clear button clicked!');
-
-});
 
 // Create number grid
-grid.appendChild(numberGrid);
-for (let i = 9; i >= 0; i--) {
+mainGrid.appendChild(numberGrid);
+for (let i = 9; i >= 1; i--) {
     let number = document.createElement('button');
     number.textContent = i;
     number.classList.add('number');
     number.id = `btn${i}`;
     numberGrid.appendChild(number);
 }
+
+// extra section
+const dotBtn = document.createElement('button');
+dotBtn.textContent = '.';
+dotBtn.classList.add('dot')
+
+const zeroBtn = document.createElement('button');
+zeroBtn.textContent = 0;
+zeroBtn.classList.add('number');
+zeroBtn.id = 'btn0';
+
+mainGrid.appendChild(extraSection);
+extraSection.appendChild(dotBtn);
+extraSection.appendChild(zeroBtn);
+
 
 // Create symbol grid
 for (let i = 0; i < operatorArray.length; i++) {
@@ -53,16 +56,16 @@ const screen = document.querySelector('.screen');
 let firstValue = '';
 let secondValue = '';
 let operator = '';
-let result;
+let result = 0;
 
+// Counter determines when to clear the screen
 let counter = 0;
 
 btnArray.forEach((btn) => {
     btn.addEventListener('click', (e) => {
         let target = e.target;
-        
+
         if (counter > 0) {
-            console.log('clearing screen');
             screen.textContent = '';
             counter--;
         }
@@ -88,6 +91,7 @@ symbolArray.forEach((symbol) => {
             counter--;
 
         } else {
+
             if (firstValue == '') {
                 firstValue = screen.textContent;
             } else if (secondValue == '') {
@@ -100,13 +104,45 @@ symbolArray.forEach((symbol) => {
             }
             operator = currentSymbol.innerHTML;
 
-            if (result != undefined) {
+            if (result != 0) {
                 firstValue = String(result);
                 secondValue = '';
                 console.log(`fv: ${firstValue}  op: ${operator}  sv: ${secondValue}  result: ${result}`);
             }
+            console.log(`fv: ${firstValue}  op: ${operator}  sv: ${secondValue}  result: ${result}`);
         }
     });
+});
+
+
+// Create CE button
+const clearEntryBtn = document.createElement('button');
+clearEntryBtn.textContent = 'CE';
+clearEntryBtn.classList.add('clearBtn');
+clearBtnsContainer.appendChild(clearEntryBtn);
+clearEntryBtn.addEventListener('click', () => {
+    if (secondValue != '') {
+        result = 0;
+        firstValue = '';
+        secondValue = '';
+        screen.textContent = '';
+        console.log(`fv: ${firstValue}  op: ${operator}  sv: ${secondValue}  result: ${result}`);
+    }
+    screen.textContent = '';
+});
+
+// Create Clear button
+const clearBtn = document.createElement('button');
+clearBtn.textContent = 'C';
+clearBtn.classList.add('clearBtn');
+clearBtnsContainer.appendChild(clearBtn);
+clearBtn.addEventListener('click', () => {
+    result = 0;
+    firstValue = '';
+    secondValue = '';
+    operator = '';
+    console.log(`fv: ${firstValue}  op: ${operator}  sv: ${secondValue}  result: ${result}`);
+    screen.textContent = '';
 });
 
 
