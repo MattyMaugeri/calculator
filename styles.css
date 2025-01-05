@@ -73,7 +73,7 @@ body {
     flex-direction: row-reverse;
 }
 
-.dot {
+#dot {
     flex: 1 1 33%;
 }
 
@@ -81,12 +81,12 @@ body {
     flex: 1 1 66%;
 }
 
-.symbolColumn {
+.operatorColumn {
     display: flex;
     flex-direction: column;
     flex: 1 1 25%;
 }
 
-.symbol {
+.operator {
     flex: 1;
 }

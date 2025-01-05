@@ -1,7 +1,7 @@
 const mainGrid = document.querySelector('.mainGrid');
 const clearBtnsContainer = document.querySelector('.clearBtnSection');
 const numberGrid = document.querySelector('.numberSection');
-const symbolGrid = document.querySelector('.symbolColumn');
+const operatorColumn = document.querySelector('.operatorColumn');
 const extraSection = document.querySelector('.extraSection');
 
 
@@ -19,10 +19,19 @@ for (let i = 9; i >= 1; i--) {
     numberGrid.appendChild(number);
 }
 
+let dotCounter = 0;
+
 // extra section
 const dotBtn = document.createElement('button');
 dotBtn.textContent = '.';
-dotBtn.classList.add('dot')
+dotBtn.id = 'dot';
+
+dotBtn.addEventListener('click', () => {    
+    if (dotCounter == 0) {
+        screen.textContent += '.';
+        dotCounter++;
+    }
+});
 
 const zeroBtn = document.createElement('button');
 zeroBtn.textContent = 0;
@@ -34,21 +43,17 @@ extraSection.appendChild(dotBtn);
 extraSection.appendChild(zeroBtn);
 
 
-// Create symbol grid
+// Create operator column
 for (let i = 0; i < operatorArray.length; i++) {
-    let symbol = document.createElement('button');
-    symbol.classList.add('symbol');
-    symbol.id = `sym${i}`;
-    symbol.textContent = operatorArray[i];
-    symbolGrid.appendChild(symbol);
+    let operator = document.createElement('button');
+    operator.classList.add('operator');
+    operator.id = `op${i}`;
+    operator.textContent = operatorArray[i];
+    operatorColumn.appendChild(operator);
 }
 
-const numberBtns = document.querySelectorAll('.number');
-const btnArray = Array.from(numberBtns);
-btnArray.reverse();
-
-const symbolBtns = document.querySelectorAll('.symbol');
-const symbolArray = Array.from(symbolBtns);
+const numberBtns = Array.from(document.querySelectorAll('.number'));
+const operatorBtns = Array.from(document.querySelectorAll('.operator'));
 
 // Display selected button on the screen
 const screen = document.querySelector('.screen');
@@ -61,7 +66,7 @@ let result = 0;
 // Counter determines when to clear the screen
 let counter = 0;
 
-btnArray.forEach((btn) => {
+numberBtns.forEach((btn) => {
     btn.addEventListener('click', (e) => {
         let target = e.target;
 
@@ -75,14 +80,16 @@ btnArray.forEach((btn) => {
 
 // console.log(`fv: ${firstValue}  op: ${operator}  sv: ${secondValue}`);
 
-symbolArray.forEach((symbol) => {
-    symbol.addEventListener('click', (e) => {
-        counter++;
-        let currentSymbol = e.target;
 
-        if (currentSymbol.innerHTML === '=') {
+operatorBtns.forEach((op) => {
+    op.addEventListener('click', (e) => {
+        counter++;
+        dotCounter = 0;
+        let currentOperator = e.target;
+
+        if (currentOperator.innerHTML === '=') {
             secondValue = screen.textContent;
-            operate(parseInt(firstValue), operator, parseInt(secondValue));
+            operate(parseFloat(firstValue), operator, parseFloat(secondValue));
             console.log(result);
             screen.textContent = result;
             firstValue = String(result);
@@ -98,11 +105,11 @@ symbolArray.forEach((symbol) => {
                 secondValue = screen.textContent;
             }
             if (operator != '') {
-                operate(parseInt(firstValue), operator, parseInt(secondValue));
+                operate(parseFloat(firstValue), operator, parseFloat(secondValue));
                 console.log(result);
                 screen.textContent = result;
             }
-            operator = currentSymbol.innerHTML;
+            operator = currentOperator.innerHTML;
 
             if (result != 0) {
                 firstValue = String(result);
