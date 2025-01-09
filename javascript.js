@@ -3,6 +3,7 @@ const clearBtnsContainer = document.querySelector('.clearBtnSection');
 const numberGrid = document.querySelector('.numberSection');
 const operatorColumn = document.querySelector('.operatorColumn');
 const extraSection = document.querySelector('.extraSection');
+const maxDigits = 9;
 
 
 const operatorArray = ['/', 'x', '-', '+', '='];
@@ -20,17 +21,23 @@ for (let i = 9; i >= 1; i--) {
 }
 
 let dotCounter = 0;
+let digitCounter = 0;
+
 
 // extra section
 const dotBtn = document.createElement('button');
 dotBtn.textContent = '.';
 dotBtn.id = 'dot';
 
-dotBtn.addEventListener('click', () => {    
-    if (dotCounter == 0) {
-        screen.textContent += '.';
-        dotCounter++;
+dotBtn.addEventListener('click', () => {
+    if (digitCounter < maxDigits) {
+        digitCounter++;
+        if (dotCounter == 0) {
+            screen.textContent += '.';
+            dotCounter++;
+        }
     }
+
 });
 
 const zeroBtn = document.createElement('button');
@@ -69,12 +76,14 @@ let counter = 0;
 numberBtns.forEach((btn) => {
     btn.addEventListener('click', (e) => {
         let target = e.target;
-
-        if (counter > 0) {
-            screen.textContent = '';
-            counter--;
+        if (digitCounter < maxDigits) {
+            digitCounter++;
+            if (counter > 0) {
+                screen.textContent = '';
+                counter--;
+            }
+            screen.textContent += target.innerHTML;
         }
-        screen.textContent += target.innerHTML;
     });
 });
 
@@ -83,9 +92,10 @@ numberBtns.forEach((btn) => {
 
 operatorBtns.forEach((op) => {
     op.addEventListener('click', (e) => {
+        let currentOperator = e.target;
         counter++;
         dotCounter = 0;
-        let currentOperator = e.target;
+        digitCounter = 0;
 
         if (currentOperator.innerHTML === '=') {
             secondValue = screen.textContent;
@@ -128,6 +138,7 @@ clearEntryBtn.textContent = 'CE';
 clearEntryBtn.classList.add('clearBtn');
 clearBtnsContainer.appendChild(clearEntryBtn);
 clearEntryBtn.addEventListener('click', () => {
+    digitCounter = 0;
     if (secondValue != '') {
         result = 0;
         firstValue = '';
@@ -145,6 +156,7 @@ clearBtn.classList.add('clearBtn');
 clearBtnsContainer.appendChild(clearBtn);
 clearBtn.addEventListener('click', () => {
     result = 0;
+    digitCounter = 0;
     firstValue = '';
     secondValue = '';
     operator = '';
